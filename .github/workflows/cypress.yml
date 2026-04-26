@@ -18,6 +18,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          
+      - name: Debug - listar tudo recursivamente
+        run: |
+          ls -R
 
       - name: Start Server Backend
         working-directory: server
