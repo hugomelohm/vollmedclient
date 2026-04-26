@@ -18,35 +18,37 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          
-      - name: Debug - listar tudo recursivamente
-        run: |
-          ls -R
 
-      - name: Start Server Backend
+      # 🔍 Debug (pode remover depois)
+      - name: Mostrar estrutura do projeto
+        run: |
+          pwd
+          ls -la
+
+      - name: Start Backend
         working-directory: server
         run: |
           npm install
           npm start &
           until curl -s http://localhost:8080 > /dev/null; do
-            echo "Waiting for backend..."
+            echo "Aguardando backend..."
             sleep 1
           done
 
-      - name: Start Web App Frontend
+      - name: Start Frontend
         working-directory: web
         run: |
           npm install
           npm start &
           until curl -s http://localhost:3000 > /dev/null; do
-            echo "Waiting for frontend..."
+            echo "Aguardando frontend..."
             sleep 1
           done
-          echo "Frontend is running"
 
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
+          project: .
           wait-on: |
             http://localhost:3000
             http://localhost:8080
