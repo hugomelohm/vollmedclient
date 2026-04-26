@@ -19,36 +19,39 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Start Server BackEnd
+      - name: Start Server Backend
         working-directory: server
         run: |
           npm install
           npm start &
-          until [ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)" = "200" ]; do
-            echo "Waiting for server to start..."
+          until curl -s http://localhost:8080 > /dev/null; do
+            echo "Waiting for backend..."
             sleep 1
           done
-          echo "Server is running successfully."
+          echo "Backend is running"
 
-      - name: Start Web App FrontEnd
+      - name: Start Web App Frontend
         working-directory: web
         run: |
           npm install
-          npm start &  
-          
+          npm start &
+          until curl -s http://localhost:3000 > /dev/null; do
+            echo "Waiting for frontend..."
+            sleep 1
+          done
+          echo "Frontend is running"
 
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
+          wait-on: |
+            http://localhost:3000
+            http://localhost:8080
           spec: |
             cypress/e2e/cadastro-sucesso.cy.js
             cypress/e2e/login-clinica.cy.js
             cypress/e2e/dashboard.cy.js
-          wait-on: |
-            http://localhost:3000
-            http://localhost:8080
-            record: true
+          record: true
         env:
-            CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
