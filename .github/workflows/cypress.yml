@@ -32,7 +32,6 @@ jobs:
             echo "Waiting for backend..."
             sleep 1
           done
-          echo "Backend is running"
 
       - name: Start Web App Frontend
         working-directory: web
