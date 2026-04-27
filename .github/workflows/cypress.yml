@@ -19,12 +19,6 @@ jobs:
         with:
           node-version: '18'
 
-      # 🔍 Debug (pode remover depois)
-      - name: Mostrar estrutura do projeto
-        run: |
-          pwd
-          ls -la
-
       - name: Start Backend
         working-directory: server
         run: |
